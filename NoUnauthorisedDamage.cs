@@ -1,10 +1,11 @@
 namespace Oxide.Plugins;
 
-[Info("No Unauthorised Damage", "&anhe", "1.1.4")]
+[Info("No Unauthorised Damage", "&anhe", "1.1.5")]
 [Description("Prevents players from damaging other players’ belongings.")]
 public class NoUnauthorisedDamage : RustPlugin
 {
     private object OnEntityTakeDamage(BaseCombatEntity entity, HitInfo info) =>
+        // Allow if
         (
             // World
             entity.OwnerID == 0 ||
@@ -23,7 +24,9 @@ public class NoUnauthorisedDamage : RustPlugin
                     // Admin
                     player.IsAdmin
                 )
-            )
+            ) ||
+            // Decay
+            info?.damageTypes?.Has(Rust.DamageType.Decay) == true
         )
             ? null : false;
 }
